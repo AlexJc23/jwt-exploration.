@@ -3,14 +3,18 @@ require('dotenv').config();
 
 // Import package
 
-// Your code here
+const jwt = require('jsonwebtoken')
 
 // Define variables - DO NOT MODIFY
 
 // 1. Sign (create) a JWT containing your email address
 let token; // DO NOT MODIFY! Re-assign the token variable below.
 
-// Your code here
+token = jwt.sign(
+    { email: 'hello@gmail.com' },
+    process.env.SECRET_KEY,
+    { expiresIn: 1 }
+);
 
 // See the JWT in the console - DO NOT MODIFY
 console.log('JWT:', token);
@@ -20,6 +24,7 @@ console.log('JWT:', token);
 let payload; // DO NOT MODIFY! Re-assign the payload variable below.
 
 // Your code here
+payload = jwt.decode(token)
 
 // See the decoded payload in the console - DO NOT MODIFY
 console.log('Payload:', payload);
@@ -28,7 +33,7 @@ console.log('Payload:', payload);
 
 let verifiedPayload; // DO NOT MODIFY! Re-assign the verifiedPayload variable below.
 
-// Your code here
+verifiedPayload = jwt.verify(token, process.env.SECRET_KEY)
 
 // See the verified payload in the console - DO NOT MODIFY
 console.log('Verified Payload:', verifiedPayload);
@@ -38,7 +43,15 @@ console.log('Verified Payload:', verifiedPayload);
 //    To "try" to get the payload using jwt.verify
 //    Then "catch" the error and log it to the console.
 
-// Your code here
+try {
+    const newSecret = 'dc4ec585cfa9a4a613e1f801e11b869698ac7f9422369769a47fb454882c681d55447ed2a1b8147e8595d3e64f0ee7eed533718cdb2fec63eff8943bc2a18a46';
+
+    const tryVerify = jwt.verify(token, newSecret);
+
+}
+catch (e) {
+    console.log('Error' , e);
+}
 
 // (Optional) Bonus: Catch Error With Expired Token
 // First, set the token's expiration (above) to 1 second
@@ -46,4 +59,11 @@ console.log('Verified Payload:', verifiedPayload);
 //    To "try" to get the payload using jwt.verify (with proper secret)
 //    Then "catch" the error and log it to the console
 
-// Your code here
+try {
+    setTimeout(() => {
+        const timeVerify = jwt.verify(token, process.env.SECRET_KEY);
+    }, 1001)
+}
+catch (e) {
+    console.log('expired error', e);
+}
